@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getJson } from './client.js';
-
-export function useApiData<T>(path: string) {
+export function useApiData<T>(load: () => Promise<T>) {
   const [data, setData] = useState<T>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -10,7 +8,7 @@ export function useApiData<T>(path: string) {
     let active = true;
     setLoading(true);
     setError(null);
-    getJson<T>(path)
+    load()
       .then((result) => {
         if (active) setData(result);
       })
@@ -23,7 +21,7 @@ export function useApiData<T>(path: string) {
     return () => {
       active = false;
     };
-  }, [path]);
+  }, [load]);
 
   return { data, loading, error };
 }

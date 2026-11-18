@@ -1,15 +1,15 @@
 import { CapabilityCard } from './CapabilityCard.js';
 import { useApiData } from '../api/useApiData.js';
+import { getJson } from '../api/client.js';
 
 type Workout = { title: string; focus: string; minutes: number; difficulty: string; reason: string };
 type WorkoutResponse = { suggestions: Workout[] };
 
 const userEmail = 'mona@example.com';
+const loadWorkouts = () => getJson<WorkoutResponse>(`/api/workouts/suggestions/${encodeURIComponent(userEmail)}`);
 
 export default function Workouts() {
-  const { data, loading, error } = useApiData<WorkoutResponse>(
-    `/api/workouts/suggestions/${encodeURIComponent(userEmail)}`,
-  );
+  const { data, loading, error } = useApiData<WorkoutResponse>(loadWorkouts);
   const suggestions = data?.suggestions ?? [];
 
   return (

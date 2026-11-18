@@ -1,11 +1,13 @@
 import { CapabilityCard } from './CapabilityCard.js';
 import { useApiData } from '../api/useApiData.js';
+import { getJson } from '../api/client.js';
 
 type Team = { name: string; mascot: string; members: string[] };
 type TeamResponse = { teams: Team[] };
+const loadTeams = () => getJson<TeamResponse>('/api/teams');
 
 export default function Teams() {
-  const { data, loading, error } = useApiData<TeamResponse>('/api/teams');
+  const { data, loading, error } = useApiData<TeamResponse>(loadTeams);
   const teams = data?.teams ?? [];
 
   return (

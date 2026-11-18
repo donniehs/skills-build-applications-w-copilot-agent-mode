@@ -1,11 +1,13 @@
 import { CapabilityCard } from './CapabilityCard.js';
 import { useApiData } from '../api/useApiData.js';
+import { getJson } from '../api/client.js';
 
 type Activity = { type: string; minutes: number; points: number };
 type ActivityResponse = { activities: Activity[] };
+const loadActivities = () => getJson<ActivityResponse>('/api/activities');
 
 export default function Activities() {
-  const { data, loading, error } = useApiData<ActivityResponse>('/api/activities');
+  const { data, loading, error } = useApiData<ActivityResponse>(loadActivities);
   const activities = data?.activities ?? [];
 
   return (
